@@ -3,6 +3,8 @@
 // { type: ‘li’, props: { }, children: [‘item 2’] }
 // ] }
 
+//** jsx createElement */
+
 type Props = { [key: string]: string }; // Assuming a basic Props type, adjust as needed
 
 type CustomElement = {

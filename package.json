@@ -6,6 +6,8 @@
     "@babel/plugin-transform-typescript": "^7.24.5",
     "@babel/preset-env": "^7.24.5",
     "@babel/preset-typescript": "^7.24.1",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
     "typescript": "^5.4.5"
   },
   "name": "virtual-dom",
