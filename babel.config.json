@@ -1,0 +1,15 @@
+{
+  
+  "presets": [
+    "@babel/preset-react",
+    "@babel/preset-typescript",
+    "@babel/preset-env"
+  ],
+  "plugins": [
+    ["@babel/plugin-transform-typescript"],
+    ["@babel/plugin-transform-react-jsx", {
+      "pragma": "createElement" // Specify the function to use instead of React.createElement
+      // "pragmaFrag": "Fragment" // If you use fragments, specify the function or object to use
+    }]
+  ]
+}
