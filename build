@@ -1,2 +1,2 @@
 
-npx babel --presets @babel/preset-react ./src --out-dir ./lib --extensions=".tsx"
+npx babel --presets @babel/preset-react ./src --out-dir ./lib --extensions=".tsx",".ts" --watch
