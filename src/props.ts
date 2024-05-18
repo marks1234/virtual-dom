@@ -36,7 +36,7 @@ function removeProp($target: HTMLElement, name: string, value: string) {
 }
 
 function isCustomProp(name: string) {
-  return false;
+  return isEventProp(name) || name === "forceUpdate"
 }
 function setProp($target: HTMLElement, name: string, value: any) {
   if (isCustomProp(name)) {
@@ -51,6 +51,7 @@ function setProp($target: HTMLElement, name: string, value: any) {
 }
 
 function updateProp($target: HTMLElement, name: string, newVal: string, oldVal: string) {
+  if (typeof newVal !== "string") return
   if (!newVal) {
     removeProp($target, name, oldVal)
   } else if (!oldVal || newVal !== oldVal) {
@@ -61,6 +62,22 @@ function updateProp($target: HTMLElement, name: string, newVal: string, oldVal: 
 export function updateProps($target: HTMLElement, newProps: Props, oldProps: Props = {}) {
   const allProps = Object.assign({}, newProps, oldProps)
   Object.keys(allProps).forEach(key => {
-    updateProp($target, key, newProps[key], oldProps[key])
+    updateProp($target, key, newProps[key] as string, oldProps[key] as string)
   })
+}
+
+export function addEventListeners($target: HTMLElement, props: Props) {
+  Object.keys(props).forEach(name => {
+    // if (typeof props[name]  )
+    if (isEventProp(name) && typeof props[name] === "function") {
+      $target.addEventListener(extractEventName(name), props[name] as (event: Event) => void)
+    }
+  })
+}
+
+function isEventProp(name: string) {
+  return /^on/.test(name);
+}
+function extractEventName(name: string): string {
+  return name.slice(2).toLowerCase();
 }

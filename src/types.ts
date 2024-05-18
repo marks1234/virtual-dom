@@ -1,4 +1,4 @@
-export type Props = { [key: string]: string };
+export type Props = { [key: string]: string | ((event: Event) => void) };
 
 export type CustomElement = {
   type: string;

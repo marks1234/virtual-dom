@@ -3,7 +3,7 @@
 // { type: ‘li’, props: { }, children: [‘item 2’] }
 // ] }
 
-import { setProps, updateProps } from "./props.js";
+import { addEventListeners, setProps, updateProps } from "./props.js";
 import { CustomElement } from "./types.js";
 
 
@@ -20,35 +20,28 @@ function createElement(node: CustomElement | string) {
     }
     const $el = document.createElement(node.type)
     setProps($el, node.props)
+    addEventListeners($el, node.props)
     node.children.map(createElement).forEach($el.appendChild.bind($el));
     return $el
 }
 
 function updateElement($parent: HTMLElement, newNode: CustomElement | string | undefined = undefined, oldNode: CustomElement | string | undefined = undefined, index = 0) {
-    console.log("NEW >>>", newNode)
-    console.log("OLD >>>", oldNode)
-    // if (!$parent) {
-    //     console.log("HOW HERE ????")
-    //     return
-    // }
+
     if (!oldNode) {
-        console.log("!oldNode")
         if (newNode)
             $parent.appendChild(createElement(newNode))
     } else if (!newNode) {
-        console.log("!newNode")
         $parent.removeChild(
             $parent.childNodes[index]
         )
     } else if (changed(newNode, oldNode)) {
-        console.log("changed")
+        console.log("PROPS >>>", oldNode)
         console.log($parent.replaceChild)
         $parent.replaceChild(
             createElement(newNode), $parent.childNodes[index]
         )
     } else if (typeof newNode != "string" && typeof oldNode != "string") {
         updateProps($parent.childNodes[index] as HTMLElement, newNode.props, oldNode.props)
-        console.log("next child")
         const newLength = newNode.children.length;
         const oldLength = oldNode.children.length;
         for (let i = 0; i < newLength || i < oldLength; i++) {
@@ -65,7 +58,12 @@ function updateElement($parent: HTMLElement, newNode: CustomElement | string | u
 }
 
 function changed(node1: CustomElement | string, node2: CustomElement | string) {
-    if (typeof node1 !== "string" && typeof node2 !== "string") return node1.type !== node2.type
+    if (typeof node1 !== "string" && typeof node2 !== "string") {
+        if (node2.props && node2.props.forceUpdate) return true
+        return node1.type !== node2.type ||
+            node2.props && node2.props.forceUpdate;
+
+    }
     return typeof node1 !== typeof node2 || typeof node1 === "string" && node1 !== node2
 }
 
@@ -73,12 +71,14 @@ function changed(node1: CustomElement | string, node2: CustomElement | string) {
 const comp = <ul className='list' style='list-style: none;'> <li>item 1</li><li>item 2</li></ul>
 
 const app = (name: string): CustomElement => {
-    const bool = name == "tom" ? true : false
+    // const func: ((event: Event) => void) = () => { }
+    // console.log(typeof func)
+    const bool = name == "Tom" ? true : false
     return <ul style="list-style: none;">
         <li className="item">item 1</li>
         <li className="item">
             <input type="checkbox" checked={bool} />
-            <input type="text" disabled={false} placeholder={name} />
+            <input type="text" disabled={!bool} placeholder={name} />
         </li>
     </ul> as unknown as CustomElement
 
@@ -96,7 +96,7 @@ const app = (name: string): CustomElement => {
 
 
 const app2 = () => (
-    <ul className=' list'><li>item 1</li><li>item 2</li></ul>
+    <ul className=' list'><li>item 1</li><li>item 2</li></ul> as unknown as CustomElement
 );
 console.log()
 
@@ -106,13 +106,26 @@ const $body = document.getElementById("root") as HTMLElement
 const $load = document.getElementById("load")
 
 
-updateElement($body, app("marco") as unknown as CustomElement)
-updateElement($body, app2() as unknown as CustomElement)
+const marco = app("marco")
+let bool = true
+updateElement($body, marco)
+updateElement($body, app2())
 $load?.addEventListener('click', () => {
-    updateElement($body, app("Tom"), app("marco"))
-})
-// document.body.appendChild(app2() as unknown as Node);
+    const tom = app("Tom")
+    if (bool) {
+        updateElement($body, tom, marco)
 
+    } else {
+        updateElement($body, marco, tom)
+    }
+    bool = bool ? false : true
+})
+document.body.appendChild(app2() as unknown as Node);
+// ----------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------
 
 // {
 //     body {
