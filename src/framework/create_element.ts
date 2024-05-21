@@ -1,16 +1,38 @@
+import { Children } from "react";
 import { addEventListeners, setProps, updateProps } from "./props.js";
 import { CustomElement } from "./types.js";
+type StatePassFunc = (parent: HTMLElement) => CustomElement | string
+function createElement(node: CustomElement | StatePassFunc | string, $parent: HTMLElement | undefined = undefined) {
+  if (typeof node == "function") {
+    console.log(node)
+    if (!$parent) {
+      return createElement({
+        type: "p", props: {},
+        children: [
+          `SOMETHING WENT WRONG HANDLING THE CHILD ELEMENT`,
+          { type: "br", props: {}, children: [] },
+          `---------------------------------------------------------------------------------------`,
+          { type: "br", props: {}, children: [] },
+          `CHILD >>> ${typeof node}`,
+          { type: "br", props: {}, children: [] },
+          `---------------------------------------------------------------------------------------`,
+          { type: "br", props: {}, children: [] },
+          `PARENT >>> ${$parent}`
+        ]
+      })
+    }
+    node = node($parent)
 
-function createElement(node: CustomElement | string) {
+    console.log(node)
+  }
   if (typeof node == "string") {
     return document.createTextNode(node)
   }
   const $el = document.createElement(node.type)
   console.log(node)
-  if (typeof node == "function") console.log(node)
   setProps($el, node.props)
   addEventListeners($el, node.props)
-  node.children.map(createElement).forEach($el.appendChild.bind($el));
+  node.children.map((val) => createElement(val, $el)).forEach($el.appendChild.bind($el));
   return $el
 }
 
@@ -51,6 +73,7 @@ export function updateElement($parent: HTMLElement, newNode: CustomElement | str
 
   }
 }
+
 
 // function changed(node1, node2) {
 //   return typeof node1 !== typeof node2 ||

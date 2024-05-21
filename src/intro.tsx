@@ -28,7 +28,7 @@ const app = (name: string): CustomElement => {
             <p>{text}</p>
         </li>
         <li>
-            {app2("yo")}
+            {($parent) => app2($parent)}
         </li>
     </ul> as unknown as CustomElement
 
@@ -47,8 +47,8 @@ const app = (name: string): CustomElement => {
 
 
 
-const app2 = (data: any) => {
-    console.log(data)
+const app2 = ($parent: HTMLElement) => {
+    console.log($parent)
     return (
         <ul className=' list'><li>item 1</li><li>item 2</li></ul> as unknown as CustomElement
     );
