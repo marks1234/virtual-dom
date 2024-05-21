@@ -1,4 +1,4 @@
-import { Props } from "./types"
+import { Props } from "./types.js"
 
 
 export function setProps($target: HTMLElement, props: Props) {
@@ -51,10 +51,11 @@ function setProp($target: HTMLElement, name: string, value: any) {
 }
 
 function updateProp($target: HTMLElement, name: string, newVal: string, oldVal: string) {
-  if (typeof newVal !== "string") return
+  // if (typeof newVal !== "string") return
   if (!newVal) {
     removeProp($target, name, oldVal)
   } else if (!oldVal || newVal !== oldVal) {
+
     setProp($target, name, newVal)
   }
 }
@@ -81,3 +82,6 @@ function isEventProp(name: string) {
 function extractEventName(name: string): string {
   return name.slice(2).toLowerCase();
 }
+
+
+
