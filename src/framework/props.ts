@@ -9,7 +9,7 @@ export function setProps($target: HTMLElement, props: Props) {
 
 
 function setBooleanProp($target: any, name: string, value: any) {
-  console.log($target[name])
+  // console.log($target[name])
   if (value) {
     $target.setAttribute(name, value)
     $target[name] = true
