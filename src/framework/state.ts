@@ -1,9 +1,8 @@
-import { marco, rerun } from "../core.jsx";
+import { reloadHandler } from "../core.js";
 
 export class State<T> {
   private data: T;
   private subscriptions: ((data: T) => void)[];
-  static test: Function
 
   constructor(initialState: T) {
     this.data = initialState;
@@ -12,7 +11,7 @@ export class State<T> {
 
 
 
-  subscribe(func: ((data: T) => void)) {
+  private subscribe(func: ((data: T) => void)) {
     this.subscriptions.push(func);
   }
 
@@ -31,11 +30,8 @@ export class State<T> {
   }
 
   private runSubscriptions() {
-    this.subscriptions.forEach(subscriber => subscriber(this.data));
-    if (!State.test) {
-      State.test = rerun(marco)
-    } else {
-      State.test = State.test()
-    }
+    // this.subscriptions.forEach(subscriber => subscriber(this.data));
+
+    reloadHandler.refresh()
   }
 }

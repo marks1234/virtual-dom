@@ -1,24 +1,33 @@
+import { App } from "./app.js";
 import { updateElement } from "./framework/create_element.js";
 import { CustomElement } from "./framework/types.js";
-
-export const rerun = (old_instance: CustomElement | undefined = undefined) => {
-    const new_instance = core()
-    updateElement($root, new_instance, old_instance)
-    return () => rerun(new_instance)
-}
+import { component2 } from "./comp1.js";
+import { Router } from "./framework/router.js"
+import { State } from "./framework/state.js";
+import { Reloader } from "./framework/page-reloader.js";
 
 
+
+const coreState = new State<string>("LOLS")
 const core = (): CustomElement => {
-    // The App function call goes here 
-    return <> "SUCK ME"</>
+    const text = coreState.get()
+    return <>
+        {text}
+        {App(coreState)}
+    </>
 }
 
+export const router = new Router()
+router.addRoute("/", core)
+router.addRoute("/test", component2)
 
 const $root = document.getElementById("root") as HTMLElement
 
-export const marco = core()
-let bool = true
+export const first_inst = core()
+window.addEventListener('DOMContentLoaded', () => {
+    router.loadInitialRoute();
+})
 
-updateElement($root, marco)
+export const reloadHandler = new Reloader($root, core)
 
 

@@ -1,7 +1,7 @@
 import { addEventListeners, setProps, updateProps } from "./props.js";
 import { CustomElement } from "./types.js";
 
-function createElement(node: CustomElement | string) {
+export function createElement(node: CustomElement | string) {
   if (typeof node == "string") {
     return document.createTextNode(node)
   }
