@@ -16,34 +16,25 @@ export function createElement(node: CustomElement | string) {
 
 export function updateElement($parent: HTMLElement, newNode: CustomElement | string | undefined = undefined, oldNode: CustomElement | string | undefined = undefined, index = 0) {
   // if (typeof newNode != "string" && newNode && newNode.type == "li") console.log("NEWNODE >>", newNode)
-  if (!oldNode) {
-    if (typeof newNode == "string") console.log("!oldNode")
-    console.log("!oldNode")
+  if (!oldNode && typeof oldNode != "string") {
+    // if (typeof newNode == "string") console.log("!oldNode")
     if (newNode)
       $parent.appendChild(createElement(newNode))
-  } else if (!newNode) {
-    if (typeof newNode == "string") console.log("!newNode")
-    console.log("!newNode")
+  } else if (!newNode && typeof newNode != "string") {
+    // if (typeof newNode == "string") console.log("!newNode")
     $parent.removeChild(
       $parent.childNodes[index]
     )
   } else if (changed(newNode, oldNode)) {
     // if (typeof newNode == "string") console.log("CHANGED")
-    // console.log("type OF  OLDNODE >>>", typeof oldNode)
-    // console.log("OLD >>>", oldNode)
-    // console.log("NEW >>>", newNode)
 
-    // THIS IS A BAND-AID SOLUTION BECAUSE FOR SOME REASON WHEN WE HAD AN EMPTY STRING SHOW UP IN THE PARENT CHILDREN
-    // THIS WAS CAUSING AN ISSUE WHERE THE INDEXING ENDED UP BEING WRONG
-    if (typeof newNode !== typeof oldNode || typeof newNode === "string" && newNode !== oldNode) {
-      $parent.replaceChildren(createElement(newNode))
-    }
     $parent.replaceChild(
       createElement(newNode), $parent.childNodes[index]
     )
   } else if (typeof newNode != "string" && typeof oldNode != "string") {
     // if (typeof newNode != "string" && newNode && newNode.type == "li") console.log("CHILD????")
     updateProps($parent.childNodes[index] as HTMLElement, newNode.props, oldNode.props)
+
     const newLength = newNode.children.length;
     const oldLength = oldNode.children.length;
     for (let i = 0; i < newLength || i < oldLength; i++) {
@@ -58,6 +49,7 @@ export function updateElement($parent: HTMLElement, newNode: CustomElement | str
 
   }
 }
+
 
 
 // function changed(node1, node2) {
