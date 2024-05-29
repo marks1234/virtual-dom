@@ -25,6 +25,7 @@ export function updateElement($parent: HTMLElement, newNode: CustomElement | str
     $parent.removeChild(
       $parent.childNodes[index]
     )
+    return -1
   } else if (changed(newNode, oldNode)) {
     // if (typeof newNode == "string") console.log("CHANGED")
 
@@ -37,14 +38,17 @@ export function updateElement($parent: HTMLElement, newNode: CustomElement | str
 
     const newLength = newNode.children.length;
     const oldLength = oldNode.children.length;
+    let removed = 0
     for (let i = 0; i < newLength || i < oldLength; i++) {
-      // console.log($parent)
-      updateElement(
+
+      // console.log("PARENT CHILDREN >>>", $parent.childNodes)
+      const state = updateElement(
         $parent.childNodes[index] as HTMLElement,
         newNode.children[i],
         oldNode.children[i],
-        i
+        i + removed
       )
+      if (state == -1) removed += state
     }
 
   }
