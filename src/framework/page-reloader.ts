@@ -17,14 +17,17 @@ export class Reloader {
 
   refresh() {
     const t = this.component()
+    // console.log("old_inst >>>", this.old_instance)
+    // console.log("NEW_inst >>>", t)
     updateElement(this.parent, t, this.old_instance)
-    this.old_instance = t
+    this.old_instance = JSON.parse(JSON.stringify(t))
   }
 
   reload(new_component: ComponentFunction) {
     const new_inst = new_component()
-    updateElement(this.parent, new_inst, this.old_instance)
-    this.old_instance = new_inst
+    this.parent.innerHTML = ""
+    updateElement(this.parent, new_inst)
+    this.old_instance = JSON.parse(JSON.stringify(new_inst))
     this.component = new_component
   }
 }
